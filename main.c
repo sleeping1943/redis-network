@@ -9,23 +9,23 @@
 #define PORT 4444
 #define MAX_LEN 1024
 
-//´æ·Å´íÎóĞÅÏ¢µÄ×Ö·û´®
+//å­˜æ”¾é”™è¯¯ä¿¡æ¯çš„å­—ç¬¦ä¸²
 char g_err_string[1024];
 
-//ÊÂ¼şÑ­»·»úÖÆ
+//äº‹ä»¶å¾ªç¯æœºåˆ¶
 aeEventLoop *g_event_loop = NULL;
 
-//¶¨Ê±Æ÷µÄÈë¿Ú£¬Êä³öÒ»¾ä»°
+//å®šæ—¶å™¨çš„å…¥å£ï¼Œè¾“å‡ºä¸€å¥è¯
 int PrintTimer(struct aeEventLoop *eventLoop, long long id, void *clientData)
 {
     static int i = 0;
     printf("Test Output: %d\n", i++);
 
-    //10ÃëºóÔÙ´ÎÖ´ĞĞ¸Ãº¯Êı
+    //10ç§’åå†æ¬¡æ‰§è¡Œè¯¥å‡½æ•°
     return 10000;
 }
 
-//Í£Ö¹ÊÂ¼şÑ­»·
+//åœæ­¢äº‹ä»¶å¾ªç¯
 void StopServer()
 {
     aeStop(g_event_loop);
@@ -33,18 +33,18 @@ void StopServer()
 
 void ClientClose(aeEventLoop *el, int fd, int err)
 {
-    //Èç¹ûerrÎª0£¬ÔòËµÃ÷ÊÇÕı³£ÍË³ö£¬·ñÔò¾ÍÊÇÒì³£ÍË³ö
+    //å¦‚æœerrä¸º0ï¼Œåˆ™è¯´æ˜æ˜¯æ­£å¸¸é€€å‡ºï¼Œå¦åˆ™å°±æ˜¯å¼‚å¸¸é€€å‡º
     if( 0 == err )
         printf("Client quit: %d\n", fd);
     else if( -1 == err )
         fprintf(stderr, "Client Error: %s\n", strerror(errno));
 
-    //É¾³ı½áµã£¬¹Ø±ÕÎÄ¼ş
+    //åˆ é™¤ç»“ç‚¹ï¼Œå…³é—­æ–‡ä»¶
     aeDeleteFileEvent(el, fd, AE_READABLE);
     close(fd);
 }
 
-//ÓĞÊı¾İ´«¹ıÀ´ÁË£¬¶ÁÈ¡Êı¾İ
+//æœ‰æ•°æ®ä¼ è¿‡æ¥äº†ï¼Œè¯»å–æ•°æ®
 void ReadFromClient(aeEventLoop *el, int fd, void *privdata, int mask)
 {
     char buffer[MAX_LEN] = { 0 };
@@ -62,7 +62,7 @@ void ReadFromClient(aeEventLoop *el, int fd, void *privdata, int mask)
     }
 }
 
-//½ÓÊÜĞÂÁ¬½Ó
+//æ¥å—æ–°è¿æ¥
 void AcceptTcpHandler(aeEventLoop *el, int fd, void *privdata, int mask)
 {
     int cfd, cport;
@@ -85,10 +85,10 @@ int main()
 
     signal(SIGINT, StopServer);
 
-    //³õÊ¼»¯ÍøÂçÊÂ¼şÑ­»·
+    //åˆå§‹åŒ–ç½‘ç»œäº‹ä»¶å¾ªç¯
     g_event_loop = aeCreateEventLoop(1024*10);
 
-    //ÉèÖÃ¼àÌıÊÂ¼ş
+    //è®¾ç½®ç›‘å¬äº‹ä»¶
     int fd = anetTcpServer(g_err_string, PORT, NULL);
     if( ANET_ERR == fd )
         fprintf(stderr, "Open port %d error: %s\n", PORT, g_err_string);
@@ -96,13 +96,13 @@ int main()
         AcceptTcpHandler, NULL) == AE_ERR )
         fprintf(stderr, "Unrecoverable error creating server.ipfd file event.");
 
-    //ÉèÖÃ¶¨Ê±ÊÂ¼ş
+    //è®¾ç½®å®šæ—¶äº‹ä»¶
     aeCreateTimeEvent(g_event_loop, 1, PrintTimer, NULL, NULL);
 
-    //¿ªÆôÊÂ¼şÑ­»·
+    //å¼€å¯äº‹ä»¶å¾ªç¯
     aeMain(g_event_loop);
 
-    //É¾³ıÊÂ¼şÑ­»·
+    //åˆ é™¤äº‹ä»¶å¾ªç¯
     aeDeleteEventLoop(g_event_loop);
 
     printf("End\n");

@@ -5,20 +5,20 @@
 #include <stdlib.h>
 
 /*
-* ÊÂ¼şÖ´ĞĞ×´Ì¬
+* äº‹ä»¶æ‰§è¡ŒçŠ¶æ€
 */
-#define AE_OK 0     // ³É¹¦
-#define AE_ERR -1   // ³ö´í
+#define AE_OK 0     // æˆåŠŸ
+#define AE_ERR -1   // å‡ºé”™
 
 /*
-* ÎÄ¼şÊÂ¼ş×´Ì¬
+* æ–‡ä»¶äº‹ä»¶çŠ¶æ€
 */
-#define AE_NONE 0       // Î´ÉèÖÃ
-#define AE_READABLE 1   // ¿É¶Á
-#define AE_WRITABLE 2   // ¿ÉĞ´
+#define AE_NONE 0       // æœªè®¾ç½®
+#define AE_READABLE 1   // å¯è¯»
+#define AE_WRITABLE 2   // å¯å†™
 
 /*
-* Ê±¼ä´¦ÀíÆ÷µÄÖ´ĞĞ flags
+* æ—¶é—´å¤„ç†å™¨çš„æ‰§è¡Œ flags
 */
 #define AE_FILE_EVENTS 1
 #define AE_TIME_EVENTS 2
@@ -26,7 +26,7 @@
 #define AE_DONT_WAIT 4
 
 /*
-* ¾ö¶¨Ê±¼äÊÂ¼şÊÇ·ñÒª³ÖĞøÖ´ĞĞµÄ flag
+* å†³å®šæ—¶é—´äº‹ä»¶æ˜¯å¦è¦æŒç»­æ‰§è¡Œçš„ flag
 */
 #define AE_NOMORE -1
 
@@ -34,7 +34,7 @@
 #define AE_NOTUSED(V) ((void) V)
 
 /*
-* ÊÂ¼ş´¦ÀíÆ÷×´Ì¬
+* äº‹ä»¶å¤„ç†å™¨çŠ¶æ€
 */
 struct aeEventLoop;
 
@@ -46,81 +46,81 @@ typedef void aeBeforeSleepProc(struct aeEventLoop *eventLoop);
 
 /* File event structure
 *
-* ÎÄ¼şÊÂ¼ş½á¹¹
+* æ–‡ä»¶äº‹ä»¶ç»“æ„
 */
 typedef struct aeFileEvent {
-    // ÊÂ¼şÀàĞÍÑÚÂë£¬Öµ¿ÉÒÔÊÇ AE_READABLE »ò AE_WRITABLE £¬»òÕßÁ½ÕßµÄ»ò
+    // äº‹ä»¶ç±»å‹æ©ç ï¼Œå€¼å¯ä»¥æ˜¯ AE_READABLE æˆ– AE_WRITABLE ï¼Œæˆ–è€…ä¸¤è€…çš„æˆ–
     int mask; /* one of AE_(READABLE|WRITABLE) */
-    // Ğ´ÊÂ¼şº¯Êı
+    // å†™äº‹ä»¶å‡½æ•°
     aeFileProc *rfileProc;
-    // ¶ÁÊÂ¼şº¯Êı
+    // è¯»äº‹ä»¶å‡½æ•°
     aeFileProc *wfileProc;
-    // ¶àÂ·¸´ÓÃ¿âµÄË½ÓĞÊı¾İ
+    // å¤šè·¯å¤ç”¨åº“çš„ç§æœ‰æ•°æ®
     void *clientData;
 } aeFileEvent;
 
 /* Time event structure
 *
-* Ê±¼äÊÂ¼ş½á¹¹
+* æ—¶é—´äº‹ä»¶ç»“æ„
 */
 typedef struct aeTimeEvent {
 
-    // Ê±¼äÊÂ¼şµÄÎ¨Ò»±êÊ¶·û
+    // æ—¶é—´äº‹ä»¶çš„å”¯ä¸€æ ‡è¯†ç¬¦
     long long id; /* time event identifier. */
 
-    // ÊÂ¼şµÄµ½´ïÊ±¼ä
+    // äº‹ä»¶çš„åˆ°è¾¾æ—¶é—´
     long when_sec; /* seconds */
     long when_ms; /* milliseconds */
 
-    // ÊÂ¼ş´¦Àíº¯Êı
+    // äº‹ä»¶å¤„ç†å‡½æ•°
     aeTimeProc *timeProc;
 
-    // ÊÂ¼şÊÍ·Åº¯Êı
+    // äº‹ä»¶é‡Šæ”¾å‡½æ•°
     aeEventFinalizerProc *finalizerProc;
 
-    // ¶àÂ·¸´ÓÃ¿âµÄË½ÓĞÊı¾İ
+    // å¤šè·¯å¤ç”¨åº“çš„ç§æœ‰æ•°æ®
     void *clientData;
 
-    // Ö¸ÏòÏÂ¸öÊ±¼äÊÂ¼ş½á¹¹£¬ĞÎ³ÉÁ´±í
+    // æŒ‡å‘ä¸‹ä¸ªæ—¶é—´äº‹ä»¶ç»“æ„ï¼Œå½¢æˆé“¾è¡¨
     struct aeTimeEvent *next;
 
 } aeTimeEvent;
 
 /* A fired event
 *
-* ÒÑ¾ÍĞ÷ÊÂ¼ş
+* å·²å°±ç»ªäº‹ä»¶
 */
 typedef struct aeFiredEvent {
-    // ÒÑ¾ÍĞ÷ÎÄ¼şÃèÊö·û
+    // å·²å°±ç»ªæ–‡ä»¶æè¿°ç¬¦
     int fd;
-    // ÊÂ¼şÀàĞÍÑÚÂë£¬¿ÉÒÔÊÇ AE_READABLE »ò AE_WRITABLE
+    // äº‹ä»¶ç±»å‹æ©ç ï¼Œå¯ä»¥æ˜¯ AE_READABLE æˆ– AE_WRITABLE
     int mask;
 } aeFiredEvent;
 
 /* State of an event based program 
 *
-* ÊÂ¼ş´¦ÀíÆ÷µÄ×´Ì¬
+* äº‹ä»¶å¤„ç†å™¨çš„çŠ¶æ€
 */
 typedef struct aeEventLoop {
-    // Ä¿Ç°ÒÑ×¢²áµÄ×î´óÃèÊö·û
+    // ç›®å‰å·²æ³¨å†Œçš„æœ€å¤§æè¿°ç¬¦
     int maxfd;   /* highest file descriptor currently registered */
-    // Ä¿Ç°ÒÑ×·×ÙµÄ×î´óÃèÊö·û
+    // ç›®å‰å·²è¿½è¸ªçš„æœ€å¤§æè¿°ç¬¦
     int setsize; /* max number of file descriptors tracked */
-    // ÓÃÓÚÉú³ÉÊ±¼äÊÂ¼ş id
+    // ç”¨äºç”Ÿæˆæ—¶é—´äº‹ä»¶ id
     long long timeEventNextId;
-    // ×îºóÒ»´ÎÖ´ĞĞÊ±¼äÊÂ¼şµÄÊ±¼ä
+    // æœ€åä¸€æ¬¡æ‰§è¡Œæ—¶é—´äº‹ä»¶çš„æ—¶é—´
     time_t lastTime;     /* Used to detect system clock skew */
-    // ÒÑ×¢²áµÄÎÄ¼şÊÂ¼ş
+    // å·²æ³¨å†Œçš„æ–‡ä»¶äº‹ä»¶
     aeFileEvent *events; /* Registered events */
-    // ÒÑ¾ÍĞ÷µÄÎÄ¼şÊÂ¼ş
+    // å·²å°±ç»ªçš„æ–‡ä»¶äº‹ä»¶
     aeFiredEvent *fired; /* Fired events */
-    // Ê±¼äÊÂ¼ş
+    // æ—¶é—´äº‹ä»¶
     aeTimeEvent *timeEventHead;
-    // ÊÂ¼ş´¦ÀíÆ÷µÄ¿ª¹Ø
+    // äº‹ä»¶å¤„ç†å™¨çš„å¼€å…³
     int stop;
-    // ¶àÂ·¸´ÓÃ¿âµÄË½ÓĞÊı¾İ
+    // å¤šè·¯å¤ç”¨åº“çš„ç§æœ‰æ•°æ®
     void *apidata; /* This is used for polling API specific data */
-    // ÔÚ´¦ÀíÊÂ¼şÇ°ÒªÖ´ĞĞµÄº¯Êı
+    // åœ¨å¤„ç†äº‹ä»¶å‰è¦æ‰§è¡Œçš„å‡½æ•°
     aeBeforeSleepProc *beforesleep;
 } aeEventLoop;
 
